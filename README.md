@@ -1,4 +1,4 @@
-# SuperPEHasher
+# SuperPeHasher
 
 SuperPEHasher is a wrapper for several hash algorithms dedicated to PE file. It includes the following:
 * MD5, SHA2
