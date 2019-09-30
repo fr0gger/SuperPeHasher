@@ -24,7 +24,7 @@ pip install -r requirements.txt
 
 ## Running the tests
 
-Once you installed the requirements you can run the file pehasher.py with a file. 
+Once you installed the requirements you can run the file pehasher.py with a file as input. 
 
 ```
 python pehasher.py sample.exe
