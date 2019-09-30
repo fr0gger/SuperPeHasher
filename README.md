@@ -10,7 +10,7 @@ SuperPEHasher is a wrapper for several hash algorithms dedicated to PE file. It 
 * Machoc Hash
 
 ## Getting Started
-if you want more information about hashing algorithms you can visit the blog I wrote on Medium. 
+if you want more information about hashing algorithms you can visit the blog I wrote on [Medium](https://medium.com/@tom_rock/fifty-shades-of-malware-hashing-3783d98df59c?source=friends_link&sk=c3f3ed798e0c087eeb1d368868462724). 
 
 
 ### Installing
