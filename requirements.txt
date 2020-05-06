@@ -4,3 +4,4 @@ pyimpfuzzy
 ssdeep
 r2pipe
 hashlib
+bitstring
