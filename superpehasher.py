@@ -149,8 +149,8 @@ class SuperPEHasher:
             for i in range(0, len(rhData)):
                 clearData += chr(ord(rhData[i]) ^ ord(xorkey[i % len(xorkey)]))
 
-            xored_richhash = hashlib.sha256(rhData).hexdigest().lower()
-            clear_richhash = hashlib.sha256(clearData).hexdigest().lower()
+            xored_richhash = hashlib.md5(rhData).hexdigest().lower()
+            clear_richhash = hashlib.md5(clearData).hexdigest().lower()
 
             return xored_richhash, clear_richhash
 
