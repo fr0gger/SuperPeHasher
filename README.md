@@ -1,6 +1,6 @@
 # SuperPeHasher
 
-SuperPEHasher is a wrapper written in Python2  ¯\_(ツ)_/¯ for several hash algorithms dedicated to PE file. It includes the following:
+SuperPEHasher is a wrapper written in Python3 for several hash algorithms dedicated to PE file. It includes the following:
 * MD5, SHA2
 * SSDEEP
 * PeHash
