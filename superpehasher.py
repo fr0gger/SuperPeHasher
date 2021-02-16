@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Super PE Hasher version 1.0 - Thomas Roccia - @fr0gger_
+"""Super PE Hasher version 1.1 python 3 support - Thomas Roccia - @fr0gger_
 
 This library is a wrapper to use hash algorithm including the following:
 MD5, SHA1, SHA2, ImpHASH, IMPFUZZY, SSDEEP, Rich Header Hash, Murmurhash, Machoc Hash, PEHASH
