@@ -125,37 +125,43 @@ class SuperPEHasher:
 
     @property
     def get_richhash(self):
-        # get richhash
-        fh = open(self.filename, "r")
-        content = ""
-        for i in fh:
-            content += i
-        fh.close()
+    # get richhash
+    fh = open(self.filename, "rb")
+    content = fh.read()
 
-        try:
-            xorkey = re.search("\x52\x69\x63\x68....\x00", content).group(0)[4:8]
+    try:
+        xorkey = re.search(b"\x52\x69\x63\x68....\x00", content).group(0)[4:8]
+        dansAnchor = []
 
-            dansAnchor = ''.join(chr(ord(x) ^ ord(y)) for x, y in zip(xorkey, "DanS"))
+        for x, y in zip(xorkey, b"\x44\x61\x6e\x53"):
+            xored = x ^ y
+            dansAnchor.append(xored)
+        dansAnchor = bytes(dansAnchor)
 
-            richStart = re.search(re.escape(dansAnchor), content).start(0)
-            richEnd = re.search("Rich" + re.escape(xorkey), content).start(0)
+    except:
+        return "No Rich header available", "No Rich header available"
 
-            if richStart < richEnd:
-                rhData = content[richStart:richEnd]
-            else:
-                raise Exception("The Rich header is not properly formated!")
+    richStart = re.search(re.escape(dansAnchor), content).start(0)
+    richEnd = re.search(b"\x52\x69\x63\x68" + re.escape(xorkey), content).start(0)
 
-            clearData = ""  # type: str
-            for i in range(0, len(rhData)):
-                clearData += chr(ord(rhData[i]) ^ ord(xorkey[i % len(xorkey)]))
+    if richStart < richEnd:
+        rhData = content[richStart:richEnd]
+    else:
+        raise Exception("The Rich header is not properly formated!")
 
-            xored_richhash = hashlib.md5(rhData).hexdigest().lower()
-            clear_richhash = hashlib.md5(clearData).hexdigest().lower()
+    clearData = []  # type: str
+    for i in range(0, len(rhData)):
+        clearData.append(rhData[i] ^ xorkey[i % len(xorkey)])
 
-            return xored_richhash, clear_richhash
+    clearData = bytes(clearData)
 
-        except:
-            return "No Rich header available", "No Rich header available"
+    xored_richhash = hashlib.md5(rhData).hexdigest().lower()
+    clear_richhash = hashlib.md5(clearData).hexdigest().lower()
+    fh.close()
+
+    return xored_richhash, clear_richhash
+    
+
 
     def get_mmh(self):
         # Get murmurhash
