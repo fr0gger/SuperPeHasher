@@ -24,7 +24,6 @@ from bitstring import pack
 
 
 class SuperPEHasher:
-
     def __init__(self, filename):
         """Definition of the kind of file"""
         try:
@@ -42,7 +41,7 @@ class SuperPEHasher:
         sys.stderr.flush()
         os.dup2(err.fileno(), sys.stderr.fileno())
 
-        self.file_read = open(filename, 'rb')
+        self.file_read = open(filename, "rb")
         self.pe = exe
         self.filename = filename
         self.r2p = r2pipe.open(filename)
@@ -70,7 +69,7 @@ class SuperPEHasher:
 
     def get_sha1(self):
         # Get Sha1
-        fic = open(self.filename, 'r')
+        fic = open(self.filename, "r")
         c = hashlib.sha1()
         while 1:
             try:
@@ -82,7 +81,7 @@ class SuperPEHasher:
 
     def get_sha2(self):
         # Get Sha2
-        fic = open(self.filename, 'r')
+        fic = open(self.filename, "r")
         c = hashlib.sha256()
         while 1:
             try:
@@ -94,7 +93,7 @@ class SuperPEHasher:
 
     def get_sha5(self):
         # Get sha5
-        fic = open(self.filename, 'r')
+        fic = open(self.filename, "r")
         c = hashlib.sha512()
         while 1:
             try:
@@ -125,43 +124,42 @@ class SuperPEHasher:
 
     @property
     def get_richhash(self):
-    # get richhash
-    fh = open(self.filename, "rb")
-    content = fh.read()
 
-    try:
-        xorkey = re.search(b"\x52\x69\x63\x68....\x00", content).group(0)[4:8]
-        dansAnchor = []
+        # get richhash
+        fh = open(self.filename, "rb")
+        content = fh.read()
 
-        for x, y in zip(xorkey, b"\x44\x61\x6e\x53"):
-            xored = x ^ y
-            dansAnchor.append(xored)
-        dansAnchor = bytes(dansAnchor)
+        try:
+            xorkey = re.search(b"\x52\x69\x63\x68....\x00", content).group(0)[4:8]
+            dansAnchor = []
 
-    except:
-        return "No Rich header available", "No Rich header available"
+            for x, y in zip(xorkey, b"\x44\x61\x6e\x53"):
+                xored = x ^ y
+                dansAnchor.append(xored)
+            dansAnchor = bytes(dansAnchor)
 
-    richStart = re.search(re.escape(dansAnchor), content).start(0)
-    richEnd = re.search(b"\x52\x69\x63\x68" + re.escape(xorkey), content).start(0)
+        except:
+            return "No Rich header available", "No Rich header available"
 
-    if richStart < richEnd:
-        rhData = content[richStart:richEnd]
-    else:
-        raise Exception("The Rich header is not properly formated!")
+        richStart = re.search(re.escape(dansAnchor), content).start(0)
+        richEnd = re.search(b"\x52\x69\x63\x68" + re.escape(xorkey), content).start(0)
 
-    clearData = []  # type: str
-    for i in range(0, len(rhData)):
-        clearData.append(rhData[i] ^ xorkey[i % len(xorkey)])
+        if richStart < richEnd:
+            rhData = content[richStart:richEnd]
+        else:
+            raise Exception("The Rich header is not properly formated!")
 
-    clearData = bytes(clearData)
+        clearData = []  # type: str
+        for i in range(0, len(rhData)):
+            clearData.append(rhData[i] ^ xorkey[i % len(xorkey)])
 
-    xored_richhash = hashlib.md5(rhData).hexdigest().lower()
-    clear_richhash = hashlib.md5(clearData).hexdigest().lower()
-    fh.close()
+        clearData = bytes(clearData)
 
-    return xored_richhash, clear_richhash
-    
+        xored_richhash = hashlib.md5(rhData).hexdigest().lower()
+        clear_richhash = hashlib.md5(clearData).hexdigest().lower()
+        fh.close()
 
+        return xored_richhash, clear_richhash
 
     def get_mmh(self):
         # Get murmurhash
@@ -175,11 +173,11 @@ class SuperPEHasher:
         exe = self.pe
 
         # Image Characteristics
-        img_chars = pack('uint:16', exe.FILE_HEADER.Characteristics)
+        img_chars = pack("uint:16", exe.FILE_HEADER.Characteristics)
         pehash_bin = img_chars[0:8] ^ img_chars[8:16]
 
         # Subsystem
-        subsystem = pack('uint:16', exe.OPTIONAL_HEADER.Subsystem)
+        subsystem = pack("uint:16", exe.OPTIONAL_HEADER.Subsystem)
         pehash_bin.append(subsystem[0:8] ^ subsystem[8:16])
 
         # Stack Commit Size, rounded up to a value divisible by 4096,
@@ -188,11 +186,16 @@ class SuperPEHasher:
         stack_commit = exe.OPTIONAL_HEADER.SizeOfStackCommit
         if stack_commit % 4096:
             stack_commit += 4096 - stack_commit % 4096
-        stack_commit = pack('uint:56', stack_commit >> 8)
+        stack_commit = pack("uint:56", stack_commit >> 8)
         pehash_bin.append(
-            stack_commit[:8] ^ stack_commit[8:16] ^
-            stack_commit[16:24] ^ stack_commit[24:32] ^
-            stack_commit[32:40] ^ stack_commit[40:48] ^ stack_commit[48:56])
+            stack_commit[:8]
+            ^ stack_commit[8:16]
+            ^ stack_commit[16:24]
+            ^ stack_commit[24:32]
+            ^ stack_commit[32:40]
+            ^ stack_commit[40:48]
+            ^ stack_commit[48:56]
+        )
 
         # Heap Commit Size, rounded up to page boundary size,
         # 8 lower bits must be discarded
@@ -200,35 +203,41 @@ class SuperPEHasher:
         heap_commit = exe.OPTIONAL_HEADER.SizeOfHeapCommit
         if heap_commit % 4096:
             heap_commit += 4096 - heap_commit % 4096
-        heap_commit = pack('uint:56', heap_commit >> 8)
+        heap_commit = pack("uint:56", heap_commit >> 8)
         pehash_bin.append(
-            heap_commit[:8] ^ heap_commit[8:16] ^
-            heap_commit[16:24] ^ heap_commit[24:32] ^
-            heap_commit[32:40] ^ heap_commit[40:48] ^ heap_commit[48:56])
+            heap_commit[:8]
+            ^ heap_commit[8:16]
+            ^ heap_commit[16:24]
+            ^ heap_commit[24:32]
+            ^ heap_commit[32:40]
+            ^ heap_commit[40:48]
+            ^ heap_commit[48:56]
+        )
 
         # Section structural information
         for section in exe.sections:
             # Virtual Address, 9 lower bits must be discarded
-            pehash_bin.append(pack('uint:24', section.VirtualAddress >> 9))
+            pehash_bin.append(pack("uint:24", section.VirtualAddress >> 9))
 
             # Size Of Raw Data, 8 lower bits must be discarded
-            pehash_bin.append(pack('uint:24', section.SizeOfRawData >> 8))
+            pehash_bin.append(pack("uint:24", section.SizeOfRawData >> 8))
 
             # Section Characteristics, 16 lower bits must be discarded
-            sect_chars = pack('uint:16', section.Characteristics >> 16)
+            sect_chars = pack("uint:16", section.Characteristics >> 16)
             pehash_bin.append(sect_chars[:8] ^ sect_chars[8:16])
 
             # Kolmogorov Complexity, len(Bzip2(data))/len(data)
             # (0..1} ∈ R   ->  [0..7] ⊂ N
             kolmogorov = 0
             if section.SizeOfRawData:
-                kolmogorov = int(round(
-                    len(compress(section.get_data()))
-                    * 7.0 /
-                    section.SizeOfRawData))
+                kolmogorov = int(
+                    round(
+                        len(compress(section.get_data())) * 7.0 / section.SizeOfRawData
+                    )
+                )
                 if kolmogorov > 7:
                     kolmogorov = 7
-            pehash_bin.append(pack('uint:8', kolmogorov))
+            pehash_bin.append(pack("uint:8", kolmogorov))
 
         assert 0 == pehash_bin.len % 8
 
@@ -237,7 +246,7 @@ class SuperPEHasher:
     def get_machoc_hash(self):
         # Get Machoc Hash adapted from https://github.com/conix-security/machoke
         binary = self.r2p
-        binary.cmd('aaa')
+        binary.cmd("aaa")
         mmh3_line = ""
         machoke_line = ""
 
@@ -246,7 +255,7 @@ class SuperPEHasher:
             print("r2 could not retrieve functions list")
 
         def get_machoke_from_function(r2p, function):
-            """ Return machoke from specific
+            """Return machoke from specific
             :rtype: object
             """
             r2p.cmd("s {}".format(function["offset"]))
@@ -256,7 +265,7 @@ class SuperPEHasher:
                     fcode = json.loads(r2p.cmd("agj"))
                     break
                 except:
-                    print >> sys.stderr, "Fail agj: %s" % hex(function["offset"])
+                    print >>sys.stderr, "Fail agj: %s" % hex(function["offset"])
                 if agj_error == 5:
                     break
                 agj_error += 1
@@ -265,7 +274,7 @@ class SuperPEHasher:
             try:
                 for block in fcode[0]["blocks"]:
                     blocks.append(
-                        {'id_block': id_block, 'offset': hex(block["offset"])}
+                        {"id_block": id_block, "offset": hex(block["offset"])}
                     )
                     id_block += 1
             except:
@@ -297,12 +306,12 @@ class SuperPEHasher:
                                 word = "{}{},".format(word, ublock["id_block"])
                     else:
                         pass
-                if word[-2] == 'c':
+                if word[-2] == "c":
                     for ublock in blocks:
                         if hex(instruction["offset"] + 4) == ublock["offset"]:
                             word = "{}{},".format(word, ublock["id_block"])
 
-                    if word[-2] == 'c':
+                    if word[-2] == "c":
                         word = "{}{},".format(word, id_block + 1)
 
                 if word[-1] == ":" and id_block != len(fcode[0]["blocks"]):
@@ -319,8 +328,10 @@ class SuperPEHasher:
         for function in funcs:
             machoke = get_machoke_from_function(binary, function)
             machoke_line = "{}{}".format(machoke_line, machoke)
-            mmh3_line = "{}{}".format(mmh3_line,
-                                      hex(mmh3.hash(machoke) & 0xFFFFFFFF).replace("0x", "").replace("L", ""))
+            mmh3_line = "{}{}".format(
+                mmh3_line,
+                hex(mmh3.hash(machoke) & 0xffffffff).replace("0x", "").replace("L", ""),
+            )
         binary.quit()
 
         return mmh3_line
