@@ -149,7 +149,7 @@ class SuperPEHasher:
         else:
             raise Exception("The Rich header is not properly formated!")
 
-        clearData = []  # type: str
+        clearData = []
         for i in range(0, len(rhData)):
             clearData.append(rhData[i] ^ xorkey[i % len(xorkey)])
 
