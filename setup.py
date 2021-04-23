@@ -1,4 +1,3 @@
-from setuptools import setup
 from setuptools import find_packages
 from distutils.core import setup
 
@@ -17,13 +16,13 @@ setup(
   long_description_content_type='text/markdown',
   url = 'https://github.com/fr0gger/SuperPeHasher',
   keywords = ['hashes', 'md5', 'sha256'],
+  packages=find_packages(),
   install_requires=[
           'mmh3',
           'pefile',
           'pyimpfuzzy',
           'ssdeep',
           'r2pipe',
-          'hashlib',
           'bitstring'
       ],
   classifiers=[
@@ -32,4 +31,7 @@ setup(
     'License :: OSI Approved :: Apache Software License',
     'Programming Language :: Python :: 3',
   ],
+  include_package_data=True,
+  python_requires='>=3.6',
+  zip_safe=False
 )
