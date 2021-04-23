@@ -10,8 +10,7 @@ SuperPEHasher is a wrapper written in Python3 for several hash algorithms dedica
 * Machoc Hash
 
 ## Getting Started
-if you want more information about hashing algorithms you can visit the blog I wrote on [Medium](https://medium.com/@tom_rock/fifty-shades-of-malware-hashing-3783d98df59c?source=friends_link&sk=c3f3ed798e0c087eeb1d368868462724). 
-
+if you want more information about hashing algorithms you can visit the blog I wrote on [Medium](https://medium.com/@tom_rock/fifty-shades-of-malware-hashing-3783d98df59c?source=friends_link&sk=c3f3ed798e0c087eeb1d368868462724).
 
 ### Installing
 
@@ -19,6 +18,7 @@ To run this tool you can git clone and install the requirements.
 
 ```
 pip install -r requirements.txt
+pip install superpehasher
 ```
           
 
