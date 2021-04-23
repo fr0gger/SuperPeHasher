@@ -1,4 +1,4 @@
-import superpehasher
+from superpehasher import superpehasher
 
 import sys
 
