@@ -1,3 +1,5 @@
+from setuptools import setup
+from setuptools import find_packages
 from distutils.core import setup
 
 """Returns contents of README.md."""
@@ -7,13 +9,13 @@ with open("README.md", "r", encoding="utf-8") as readme_fp:
 setup(
   name = 'superpehasher',
   packages = ['superpehasher'],
-  version = '0.4',
-  license='APACHE',
+  version = '0.5',
+  license='Apache',
   description = 'SuperPEHasher is a wrapper written in Python3 for several hash algorithms dedicated to PE file.',
   long_description=long_description,
   url = 'https://github.com/fr0gger/SuperPeHasher',
   keywords = ['hashes', 'md5', 'sha256'],
-  install_requires=[            # I get to this in a second
+  install_requires=[
           'mmh3',
           'pefile',
           'pyimpfuzzy',
@@ -25,7 +27,7 @@ setup(
   classifiers=[
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
-    'License :: OSI Approved :: Apache 2 License',   # Again, pick a license
+    'License :: OSI Approved :: Apache Software License',
     'Programming Language :: Python :: 3',
   ],
 )
