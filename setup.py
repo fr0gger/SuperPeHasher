@@ -11,8 +11,10 @@ setup(
   packages = ['superpehasher'],
   version = '0.5',
   license='Apache',
+  author='Thomas Roccia @fr0gger_',
   description = 'SuperPEHasher is a wrapper written in Python3 for several hash algorithms dedicated to PE file.',
   long_description=long_description,
+  long_description_content_type='text/markdown',
   url = 'https://github.com/fr0gger/SuperPeHasher',
   keywords = ['hashes', 'md5', 'sha256'],
   install_requires=[

@@ -1,0 +1,9 @@
+README.md
+setup.py
+superpehasher/__init__.py
+superpehasher/superpehasher.py
+superpehasher.egg-info/PKG-INFO
+superpehasher.egg-info/SOURCES.txt
+superpehasher.egg-info/dependency_links.txt
+superpehasher.egg-info/requires.txt
+superpehasher.egg-info/top_level.txt

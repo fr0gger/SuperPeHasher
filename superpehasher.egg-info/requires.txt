@@ -1,0 +1,7 @@
+mmh3
+pefile
+pyimpfuzzy
+ssdeep
+r2pipe
+hashlib
+bitstring
