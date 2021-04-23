@@ -18,6 +18,7 @@ To run this tool you can git clone and install the requirements.
 
 ```
 pip install -r requirements.txt
+or
 pip install superpehasher
 ```
           
