@@ -18,9 +18,11 @@ import pyimpfuzzy
 import ssdeep
 import r2pipe
 import json
+import lief
 
 from bz2 import compress
 from bitstring import pack
+from PIL import Image
 
 
 class SuperPEHasher:
@@ -335,3 +337,48 @@ class SuperPEHasher:
         binary.quit()
 
         return mmh3_line
+    
+    
+    # generate dhash icon
+    def get_icon_dhash(self, hash_size = 8):
+        # extract icon
+        #extract_icon(self.pe)
+
+        binary = lief.parse(self.filename)
+        # extracting icon and saves in a temp file peico.ico
+        bin = binary.resources_manager
+        ico = bin.icons
+        ico = ico[0].save("peico.ico")
+
+        # open extracted icon
+        icon = Image.open("peico.ico")
+        icon = icon.convert('L').resize(
+            (hash_size + 1, hash_size),
+            Image.ANTIALIAS,
+            )
+    
+        pixels = list(icon.getdata())
+
+        # Compare pixels.
+        diff = []
+
+        for row in range(hash_size):
+            for col in range(hash_size):
+                left = icon.getpixel((col, row))
+                right = icon.getpixel((col + 1, row))
+                diff.append(left > right)
+
+        decimal_value = 0
+        hex_string = []
+
+        for index, value in enumerate(diff):
+            if value:
+                decimal_value += 2**(index % 8)
+
+            if (index % 8) == 7:
+                hex_string.append(hex(decimal_value)[2:].rjust(2, '0'))
+                decimal_value = 0
+    
+        os.remove("peico.ico")
+
+        return ''.join(hex_string)
