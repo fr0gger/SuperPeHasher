@@ -5,3 +5,5 @@ ssdeep
 r2pipe
 hashlib
 bitstring
+lief
+pillow
