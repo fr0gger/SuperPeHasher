@@ -24,7 +24,7 @@ pip install superpehasher
 ```
           
 
-## Running the tests
+## Running the test
 
 Once you installed the requirements you can run the file pehasher.py with a file as input. 
 
